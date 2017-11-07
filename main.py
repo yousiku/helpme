@@ -1,0 +1,59 @@
+from flask import Flask, request
+import hashlib, traceback
+import xml.etree.ElementTree as ET
+import time
+
+
+app = Flask(__name__)
+
+@app.route('/', methods=["GET", "POST"])
+def hello_world():
+    try:
+        if request.method == "GET":
+            data = request.args
+            print(data)
+            if "signature" in data and "timestamp" in data and "nonce" in data and "echostr" in data:
+                signature = data["signature"]
+                timestamp = data["timestamp"]
+                nonce = data["nonce"]
+                echostr = data["echostr"]
+                token = "yousiku"
+
+                l = [token, timestamp, nonce]
+                l.sort()
+                sha1 = hashlib.sha1()
+                for i in l:
+                    sha1.update(i.encode())
+                hashcode = sha1.hexdigest()
+                print("handle/GET func: hashcode, signature:", hashcode, signature)
+                if hashcode == signature:
+                    return echostr
+                else:
+                    return ""
+            else:
+                return ""
+        elif request.method == "POST":
+            xml_data = request.data
+            print(xml_data)
+            data = ET.fromstring(xml_data.decode())
+            server_user_name = data.find("ToUserName")
+            msg_id = data.find("MsgId")
+            msg_type = data.find("MsgType")
+            user_name = data.find("FromUserName")
+            content = data.find("Content")
+            print("receive>> user: {}, msg type: {}, content: {}".format(user_name.text, msg_type.text, content.text))
+            resp = ET.parse("./resp.xml")
+            root = resp.getroot()
+            r_str = ET.tostring(root, encoding="utf-8")
+            print(r_str)
+            return r_str
+        else:
+            print(request.method, request.form)
+    except Exception as e:
+        print(traceback.format_exc())
+        return e
+
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80)
