@@ -6,32 +6,41 @@ import time
 
 app = Flask(__name__)
 
+
+def verify_source(request):
+    """
+    验证请求对来源是否是微信
+    :param request: flask.request
+    :return: 验证正确返回echostr，否则返回空
+    """
+    data = request.args
+    if "signature" in data and "timestamp" in data and "nonce" in data and "echostr" in data:
+        signature = data["signature"]
+        timestamp = data["timestamp"]
+        nonce = data["nonce"]
+        echostr = data["echostr"]
+        token = "yousiku"
+        l = [token, timestamp, nonce]
+        l.sort()
+        sha1 = hashlib.sha1()
+        for i in l:
+            sha1.update(i.encode())
+        hashcode = sha1.hexdigest()
+        print("handle/GET func: hashcode, signature:", hashcode, signature)
+        if hashcode == signature:
+            return echostr
+        else:
+            return ""
+    else:
+        return ""
+
+
 @app.route('/', methods=["GET", "POST"])
 def hello_world():
     try:
         if request.method == "GET":
-            data = request.args
-            print(data)
-            if "signature" in data and "timestamp" in data and "nonce" in data and "echostr" in data:
-                signature = data["signature"]
-                timestamp = data["timestamp"]
-                nonce = data["nonce"]
-                echostr = data["echostr"]
-                token = "yousiku"
+            return verify_source(request)
 
-                l = [token, timestamp, nonce]
-                l.sort()
-                sha1 = hashlib.sha1()
-                for i in l:
-                    sha1.update(i.encode())
-                hashcode = sha1.hexdigest()
-                print("handle/GET func: hashcode, signature:", hashcode, signature)
-                if hashcode == signature:
-                    return echostr
-                else:
-                    return ""
-            else:
-                return ""
         elif request.method == "POST":
             xml_data = request.data
             print(xml_data)
