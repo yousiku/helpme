@@ -41,9 +41,21 @@ def hello_world():
             msg_type = data.find("MsgType")
             user_name = data.find("FromUserName")
             content = data.find("Content")
-            print("receive>> user: {}, msg type: {}, content: {}".format(user_name.text, msg_type.text, content.text))
-            resp = ET.parse("./resp.xml")
+            print("receive>> user: {}, msg type: {}".format(user_name.text, msg_type.text))
+            if msg_type.text == "text":
+                resp = ET.parse("./reply_common.xml")
+            elif msg_type.text == "event":
+                event = data.find("Event")
+                if event.text == "subscribe":
+                    resp = ET.parse("./reply_subscribe.xml")
+                else:
+                    return ""
+            else:
+                return ""
             root = resp.getroot()
+            root.find("ToUserName").text = user_name.text
+            root.find("FromUserName").text = server_user_name.text
+            root.find("CreateTime").text = str(int(time.time()))
             r_str = ET.tostring(root, encoding="utf-8")
             print(r_str)
             return r_str
