@@ -69,12 +69,12 @@ def hello_world():
             print(r_str)
             return r_str
         else:
-            print(request.method, request.form)
+            print("!!!!!", request.method)
     except Exception as e:
         print(traceback.format_exc())
-        return e
+        return "{}".format(e)
 
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=80, threaded=True)
