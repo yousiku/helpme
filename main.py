@@ -40,13 +40,13 @@ def hello_world():
                 me = rec_msg.to_user_name
                 if rec_msg.msg_type == "text":
                     content = "等那个脑残程序员把代码写完我再来找你。不要问我为什么，我也很无奈"
-                    return reply.TextMsg(user, me, content).data
+                    return reply.TextMsg(me, user, content).data
                 elif rec_msg.msg_type == "image":
                     media_id = rec_msg.media_id
-                    return reply.ImageMsg(user, me, media_id).data
+                    return reply.ImageMsg(me, user, media_id).data
                 elif rec_msg.msg_type == "event":
                     content = "哈喽，我现在还不能用哦~"
-                    return reply.TextMsg(user, me, content).data
+                    return reply.TextMsg(me, user, content).data
                 else:
                     print("消息类型", rec_msg.msg_type, type(rec_msg.msg_type))
                     return "success"
