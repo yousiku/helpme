@@ -44,6 +44,9 @@ def hello_world():
                 elif rec_msg.msg_type == "image":
                     media_id = rec_msg.media_id
                     return reply.ImageMsg(me, user, media_id).data
+                elif rec_msg.msg_type == 'voice':
+                    media_id = rec_msg.media_id
+                    return reply.VoiceMsg(me, user, media_id).data
                 elif rec_msg.msg_type == "event":
                     content = "哈喽，我现在还不能用哦~"
                     return reply.TextMsg(me, user, content).data

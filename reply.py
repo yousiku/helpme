@@ -6,6 +6,7 @@ class Msg:
         self._dict = dict()
         self._dict['FromUserName'] = from_user_name
         self._dict['ToUserName'] = to_user_name
+        self._dict['CreateTime'] = int(time.time())
 
     @property
     def data(self):
@@ -15,7 +16,6 @@ class Msg:
 class TextMsg(Msg):
     def __init__(self, from_user_name, to_user_name, content):
         Msg.__init__(self, from_user_name, to_user_name)
-        self._dict['CreateTime'] = int(time.time())
         self._dict['Content'] = content
 
     @property
@@ -35,7 +35,6 @@ class TextMsg(Msg):
 class ImageMsg(Msg):
     def __init__(self, from_user_name, to_user_name, media_id):
         Msg.__init__(self, from_user_name, to_user_name)
-        self._dict['CreateTime'] = int(time.time())
         self._dict['MediaId'] = media_id
 
     @property
@@ -49,6 +48,27 @@ class ImageMsg(Msg):
         <Image>
         <MediaId><![CDATA[{MediaId}]]></MediaId>
         </Image>
+        </xml>
+        """
+        return xml_form.format(**self._dict)
+
+
+class VoiceMsg(Msg):
+    def __init__(self, from_user_name, to_user_name, media_id):
+        Msg.__init__(self, from_user_name, to_user_name)
+        self._dict['MediaId'] = media_id
+
+    @property
+    def data(self):
+        xml_form = """
+        <xml>
+        <ToUserName><![CDATA[{ToUserName}]]></ToUserName>
+        <FromUserName><![CDATA[{FromUserName}]]></FromUserName>
+        <CreateTime>{CreateTime}</CreateTime>
+        <MsgType><![CDATA[voice]]></MsgType>
+        <Voice>
+        <MediaId><![CDATA[{MediaId}]]></MediaId>
+        </Voice>
         </xml>
         """
         return xml_form.format(**self._dict)

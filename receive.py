@@ -15,8 +15,10 @@ def parse_xml(web_data):
         return TextMsg(xml_data)
     elif msg_type == 'image':
         return ImageMsg(xml_data)
+    elif msg_type == 'voice':
+        return VoiceMsg(xml_data)
     else:
-        print("Unknown Msg Type: {}".format(msg_type))
+        print("不支持的消息类型: {}".format(msg_type))
         return None
 
 
@@ -46,6 +48,16 @@ class ImageMsg(Msg):
         Msg.__init__(self, xml_data)
         self.picture_url = xml_data.find('PicUrl').text
         self.media_id = xml_data.find('MediaId').text
+
+
+class VoiceMsg(Msg):
+    """
+    语音消息
+    """
+    def __init__(self, xml_data):
+        Msg.__init__(self, xml_data)
+        self.media_id = xml_data.find('MediaId').text
+        self.format = xml_data.find('Format').text
 
 
 class SubscribeMsg(Msg):
