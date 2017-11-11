@@ -21,6 +21,8 @@ def parse_xml(web_data):
         return VideoMsg(xml_data)
     elif msg_type == 'location':
         return LocationMsg(xml_data)
+    elif msg_type == 'link':
+        return LinkMsg(xml_data)
     else:
         print("不支持的消息类型: {}".format(msg_type))
         return None
@@ -92,6 +94,17 @@ class LocationMsg(Msg):
         self.location_y = xml_data.find('Location_Y').text
         self.scale = xml_data.find('Scale').text
         self.label = xml_data.find('Label').text
+
+
+class LinkMsg(Msg):
+    """
+    链接消息
+    """
+    def __init__(self, xml_data):
+        Msg.__init__(self, xml_data)
+        self.title = xml_data.find('Title').text
+        self.description = xml_data.find('Description').text
+        self.url = xml_data.find('Url').text
 
 
 class SubscribeMsg(Msg):

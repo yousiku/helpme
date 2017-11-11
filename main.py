@@ -57,6 +57,9 @@ def hello_world():
                     content = "位置：{}, 经：{}, 纬：{}, 缩放：{}".format(
                         rec_msg.label, rec_msg.location_y, rec_msg.location_x, rec_msg.scale)
                     return reply.TextMsg(me, user, content).data
+                elif rec_msg.msg_type == "link":
+                    content = "标题：{}\n链接：{}\n描述：{}\n".format(rec_msg.title, rec_msg.url, rec_msg.description)
+                    return reply.TextMsg(me, user, content).data
                 elif rec_msg.msg_type == "event":
                     content = "哈喽，我现在还不能用哦~"
                     return reply.TextMsg(me, user, content).data
