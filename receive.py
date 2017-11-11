@@ -17,6 +17,8 @@ def parse_xml(web_data):
         return ImageMsg(xml_data)
     elif msg_type == 'voice':
         return VoiceMsg(xml_data)
+    elif msg_type == 'video' or msg_type == 'shortvideo':
+        return VideoMsg(xml_data)
     else:
         print("不支持的消息类型: {}".format(msg_type))
         return None
@@ -58,6 +60,24 @@ class VoiceMsg(Msg):
         Msg.__init__(self, xml_data)
         self.media_id = xml_data.find('MediaId').text
         self.format = xml_data.find('Format').text
+
+
+class VideoMsg(Msg):
+    """
+    视频消息
+    """
+    def __init__(self, xml_data):
+        Msg.__init__(self, xml_data)
+        self.media_id = xml_data.find('MediaId').text
+        self.thumb_media_id = xml_data.find('ThumbMediaId').text
+
+
+# class ShortVideoMsg(VideoMsg):
+#     """
+#     小视频消息
+#     """
+#     def __init__(self, xml_data):
+#         VideoMsg.__init__(self, xml_data)
 
 
 class SubscribeMsg(Msg):

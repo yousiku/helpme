@@ -36,6 +36,7 @@ def hello_world():
             xml_data = request.data
             rec_msg = receive.parse_xml(xml_data)
             if isinstance(rec_msg, receive.Msg):
+                print("<<<<<", rec_msg.msg_type)
                 user = rec_msg.from_user_name
                 me = rec_msg.to_user_name
                 if rec_msg.msg_type == "text":
@@ -47,6 +48,11 @@ def hello_world():
                 elif rec_msg.msg_type == 'voice':
                     media_id = rec_msg.media_id
                     return reply.VoiceMsg(me, user, media_id).data
+                elif rec_msg.msg_type == 'video' or rec_msg.msg_type == 'shortvideo':
+                    # FIXME 发送视频不成功，暂时先发送缩略图
+                    media_id = rec_msg.media_id
+                    thumb_media_id = rec_msg.thumb_media_id
+                    return reply.ImageMsg(me, user, thumb_media_id).data
                 elif rec_msg.msg_type == "event":
                     content = "哈喽，我现在还不能用哦~"
                     return reply.TextMsg(me, user, content).data
