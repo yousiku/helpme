@@ -15,6 +15,9 @@ def parse_xml(web_data):
         return TextMsg(xml_data)
     elif msg_type == 'image':
         return ImageMsg(xml_data)
+    else:
+        print("Unknown Msg Type: {}".format(msg_type))
+        return None
 
 
 class Msg:
