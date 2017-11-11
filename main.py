@@ -53,6 +53,10 @@ def hello_world():
                     media_id = rec_msg.media_id
                     thumb_media_id = rec_msg.thumb_media_id
                     return reply.ImageMsg(me, user, thumb_media_id).data
+                elif rec_msg.msg_type == 'location':
+                    content = "位置：{}, 经：{}, 纬：{}, 缩放：{}".format(
+                        rec_msg.label, rec_msg.location_y, rec_msg.location_x, rec_msg.scale)
+                    return reply.TextMsg(me, user, content).data
                 elif rec_msg.msg_type == "event":
                     content = "哈喽，我现在还不能用哦~"
                     return reply.TextMsg(me, user, content).data

@@ -19,6 +19,8 @@ def parse_xml(web_data):
         return VoiceMsg(xml_data)
     elif msg_type == 'video' or msg_type == 'shortvideo':
         return VideoMsg(xml_data)
+    elif msg_type == 'location':
+        return LocationMsg(xml_data)
     else:
         print("不支持的消息类型: {}".format(msg_type))
         return None
@@ -78,6 +80,18 @@ class VideoMsg(Msg):
 #     """
 #     def __init__(self, xml_data):
 #         VideoMsg.__init__(self, xml_data)
+
+
+class LocationMsg(Msg):
+    """
+    地理位置消息
+    """
+    def __init__(self, xml_data):
+        Msg.__init__(self, xml_data)
+        self.location_x = xml_data.find('Location_X').text
+        self.location_y = xml_data.find('Location_Y').text
+        self.scale = xml_data.find('Scale').text
+        self.label = xml_data.find('Label').text
 
 
 class SubscribeMsg(Msg):
